@@ -16,6 +16,8 @@
 
 package gaiden.message
 
+import gaiden.util.Utf8ResourceBundleControl
+
 import java.text.MessageFormat
 
 /**
@@ -30,7 +32,7 @@ class MessageSource {
     private ResourceBundle resource
 
     MessageSource(String bundleName = "messages") {
-        resource = ResourceBundle.getBundle(bundleName)
+        resource = ResourceBundle.getBundle(bundleName, Locale.default, this.class.classLoader, new Utf8ResourceBundleControl())
     }
 
     /**
