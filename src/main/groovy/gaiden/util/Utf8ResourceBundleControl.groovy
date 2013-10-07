@@ -40,32 +40,36 @@ class Utf8ResourceBundleControl extends ResourceBundle.Control {
     @Override
     ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
     throws IllegalAccessException, InstantiationException, IOException {
-        // The below is a copy of the default implementation.
-        String bundleName = toBundleName(baseName, locale)
-        String resourceName = toResourceName(bundleName, "properties")
+        def bundleName = toBundleName(baseName, locale)
+        def resourceName = toResourceName(bundleName, "properties")
+
+        def stream = (reload) ? getReloadableInputStream(loader, resourceName) : loader.getResourceAsStream(resourceName)
+        if (!stream) {
+            return null
+        }
+
         ResourceBundle bundle = null
-        InputStream stream = null
-        if (reload) {
-            URL url = loader.getResource(resourceName)
-            if (url != null) {
-                URLConnection connection = url.openConnection()
-                if (connection != null) {
-                    connection.setUseCaches(false)
-                    stream = connection.inputStream
-                }
-            }
-        } else {
-            stream = loader.getResourceAsStream(resourceName)
+        try {
+            bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"))
+        } finally {
+            stream.close()
         }
-        if (stream != null) {
-            try {
-                // Only this line is changed to make it to read properties files as UTF-8.
-                bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"))
-            } finally {
-                stream.close()
-            }
+        bundle
+    }
+
+    private InputStream getReloadableInputStream(ClassLoader loader, String resourceName) {
+        def url = loader.getResource(resourceName)
+        if (!url) {
+            return null
         }
-        return bundle
+
+        def connection = url.openConnection()
+        if (!connection) {
+            return null
+        }
+
+        connection.setUseCaches(false)
+        return connection.inputStream
     }
 
 }
