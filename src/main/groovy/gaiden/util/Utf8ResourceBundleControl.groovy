@@ -17,25 +17,30 @@
 package gaiden.util
 
 /**
- *
+ * The control of resource bundle using UTF-8 encoding in resource properties.
  *
  * @author Hideki IGARASHI
- * @author Kazuki YAMAMOTO
  */
 class Utf8ResourceBundleControl extends ResourceBundle.Control {
 
     /**
-     * http://stackoverflow.com/a/4660195/1359107
+     * Instantiates a resource bundle.
+     * This method is based on {@link ResourceBundle.Control#newBundle(String, Locale, String, ClassLoader, boolean)}.
+     * <p>
+     * This implement reads properties files as UTF-8.
+     * Also, {@code "java.class"} format is not supported.
+     * {@code format} parameter is ignored.
      *
-     * @param baseName
-     * @param locale
-     * @param format
-     * @param loader
-     * @param reload
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws IOException
+     * @param baseName the base bundle name
+     * @param locale the locale for which the resource bundle should be instantiated
+     * @param format this parameter is ignored
+     * @param loader the {@code ClassLoader} to use to load the bundle
+     * @param reload the flag to indicate bundle reloading
+     * @return the resource bundle instance
+     * @throws IllegalAccessException if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException if the instantiation of a class fails for some other reason.
+     * @throws IOException if an error occurred when reading resources using any I/O operations
+     * @see ResourceBundle.Control#newBundle(String, Locale, String, ClassLoader, boolean)
      */
     @Override
     ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
@@ -48,13 +53,11 @@ class Utf8ResourceBundleControl extends ResourceBundle.Control {
             return null
         }
 
-        ResourceBundle bundle = null
         try {
-            bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"))
+            return new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"))
         } finally {
             stream.close()
         }
-        bundle
     }
 
     private InputStream getReloadableInputStream(ClassLoader loader, String resourceName) {
