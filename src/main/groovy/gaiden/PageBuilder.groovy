@@ -19,6 +19,8 @@ package gaiden
 import gaiden.context.PageBuildContext
 import gaiden.markdown.GaidenMarkdownProcessor
 import org.pegdown.Extensions
+import org.pegdown.plugins.PegDownPlugins
+import org.vince.pegdown.furigana.FuriganaParser
 
 /**
  * A markdown page builder builds from a markdown to a HTML.
@@ -32,7 +34,8 @@ class PageBuilder {
     private GaidenMarkdownProcessor markdownProcessor
 
     PageBuilder(TemplateEngine templateEngine) {
-        this(templateEngine, new GaidenMarkdownProcessor(Extensions.ALL - Extensions.HARDWRAPS))
+        this(templateEngine, new GaidenMarkdownProcessor(Extensions.ALL - Extensions.HARDWRAPS,
+                PegDownPlugins.builder().withPlugin(FuriganaParser.class).build()))
     }
 
     PageBuilder(TemplateEngine templateEngine, GaidenMarkdownProcessor markdownProcessor) {
@@ -49,8 +52,8 @@ class PageBuilder {
      */
     Page build(PageBuildContext context, PageSource pageSource) {
         new Page(
-            source: pageSource,
-            content: buildPage(context, pageSource),
+                source: pageSource,
+                content: buildPage(context, pageSource),
         )
     }
 
@@ -58,11 +61,11 @@ class PageBuilder {
         def content = markdownProcessor.markdownToHtml(context, pageSource)
 
         def binding = new BindingBuilder()
-            .setContent(content)
-            .setPageBuildContext(context)
-            .setOutputPath(pageSource.outputPath)
-            .setSourcePath(pageSource.path)
-            .build()
+                .setContent(content)
+                .setPageBuildContext(context)
+                .setOutputPath(pageSource.outputPath)
+                .setSourcePath(pageSource.path)
+                .build()
 
         templateEngine.make(binding)
     }

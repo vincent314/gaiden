@@ -20,6 +20,7 @@ import gaiden.PageSource
 import gaiden.context.PageBuildContext
 import org.pegdown.ParsingTimeoutException
 import org.pegdown.PegDownProcessor
+import org.pegdown.plugins.PegDownPlugins
 
 /**
  * A Processor for Markdown.
@@ -31,6 +32,10 @@ class GaidenMarkdownProcessor extends PegDownProcessor {
 
     GaidenMarkdownProcessor(int options) {
         super(options)
+    }
+
+    GaidenMarkdownProcessor(int options, PegDownPlugins plugins) {
+        super(options,plugins)
     }
 
     /**
