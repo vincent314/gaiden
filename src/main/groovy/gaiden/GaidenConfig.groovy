@@ -54,9 +54,20 @@ class GaidenConfig {
     /** The output encoding of files */
     String outputEncoding
 
+    /** Pegdown extensions */
+    Class[] pegdownPlugins
+
+    /** The path of template for a single file output */
+    String singleTemplateFilePath
+
     /** Returns the {@link #templateFilePath} as {@link File} */
     File getTemplateFile() {
+
         new File(templateFilePath)
+    }
+    /** Returns the {@link #singleTemplateFilePath} as {@link File} */
+    File getSingleTemplateFile() {
+        new File(singleTemplateFilePath)
     }
 
     /** Returns the {@link #tocFilePath} as {@link File} */

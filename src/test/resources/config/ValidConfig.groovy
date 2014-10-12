@@ -17,6 +17,7 @@
 title = "Test Title"
 tocTitle = "Test TOC Title"
 templateFilePath = "test/templates/layout.html"
+singleTemplateFilePath = "test/templates/single-layout.html"
 tocFilePath = "test/pages/toc.groovy"
 tocOutputFilePath = "test/toc.html"
 pagesDirectoryPath = "test/pages"

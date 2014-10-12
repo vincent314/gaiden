@@ -16,11 +16,13 @@
 
 package gaiden.markdown
 
+import gaiden.Holders
 import gaiden.PageSource
 import gaiden.context.PageBuildContext
 import org.pegdown.ParsingTimeoutException
 import org.pegdown.PegDownProcessor
 import org.pegdown.plugins.PegDownPlugins
+import org.vince.pegdown.furigana.FuriganaParser
 
 /**
  * A Processor for Markdown.
@@ -31,11 +33,22 @@ import org.pegdown.plugins.PegDownPlugins
 class GaidenMarkdownProcessor extends PegDownProcessor {
 
     GaidenMarkdownProcessor(int options) {
-        super(options)
+        super(options,buildPlugins())
     }
 
-    GaidenMarkdownProcessor(int options, PegDownPlugins plugins) {
-        super(options,plugins)
+    static PegDownPlugins buildPlugins() {
+//        String[] plugins = Holders.config.pegdownPlugins
+//
+//        if(!plugins) {
+//            return PegDownPlugins.NONE
+//        }
+
+        PegDownPlugins.Builder builder = PegDownPlugins.builder()
+//        plugins.each {
+//            builder.withPlugin(Class.forName(it,true,FuriganaParser.class.classLoader))
+//        }
+        builder.withPlugin(FuriganaParser.class)
+        builder.build()
     }
 
     /**
